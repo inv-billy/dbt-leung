@@ -2,4 +2,9 @@ version: 2
 
 models:
   - name: document_services
+    columns:
+      - name: doc_id
+        tests:
+          - unique
+          - not_null
 
