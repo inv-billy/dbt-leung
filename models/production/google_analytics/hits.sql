@@ -18,26 +18,9 @@ SELECT
     hits.trafficSource,
     hits.urlPath,
     hits.urlQuery,
-    hits.customDim1,
-    hits.customDim2,
-    hits.customDim3,
-    hits.customDim4,
-    hits.customDim5,
-    hits.customDim6,
-    hits.customDim7,
-    hits.customDim8,
-    hits.customDim9,
-    hits.customDim10,
-    hits.customDim11,
-    hits.customDim12,
-    hits.customDim13,
-    hits.customDim14,
-    hits.customDim15,
-    hits.customDim16,
-    hits.customDim17,
-    hits.customDim18,
-    hits.customDim19,
-    hits.customDim20,
+    {% for i in range(20) %}
+        hits.customDim{{ i+1 }},
+    {% endfor %}
     hits.dt,
     CASE
         WHEN LENGTH(landingPage) >= 1000 THEN NULL
@@ -97,26 +80,10 @@ FROM (
             REGEXP_EXTRACT(hits.page.pagePath, "([^?^#]+)[?#]*.*") /* remove querystring and fragments */
         ) AS urlPath,
         REGEXP_EXTRACT(hits.page.pagePath, "[^\?]+[\?]([^#]*)[#]*.*") AS urlQuery,
-        (SELECT value FROM hits.customdimensions WHERE index = 1 LIMIT 1) AS customDim1,
-        (SELECT value FROM hits.customdimensions WHERE index = 2 LIMIT 1) AS customDim2,
-        (SELECT value FROM hits.customdimensions WHERE index = 3 LIMIT 1) AS customDim3,
-        (SELECT value FROM hits.customdimensions WHERE index = 4 LIMIT 1) AS customDim4,
-        (SELECT value FROM hits.customdimensions WHERE index = 5 LIMIT 1) AS customDim5,
-        (SELECT value FROM hits.customdimensions WHERE index = 6 LIMIT 1) AS customDim6,
-        (SELECT value FROM hits.customdimensions WHERE index = 7 LIMIT 1) AS customDim7,
-        (SELECT value FROM hits.customdimensions WHERE index = 8 LIMIT 1) AS customDim8,
-        (SELECT value FROM hits.customdimensions WHERE index = 9 LIMIT 1) AS customDim9,
-        (SELECT value FROM hits.customdimensions WHERE index = 10 LIMIT 1) AS customDim10,
-        (SELECT value FROM hits.customdimensions WHERE index = 11 LIMIT 1) AS customDim11,
-        (SELECT value FROM hits.customdimensions WHERE index = 12 LIMIT 1) AS customDim12,
-        (SELECT value FROM hits.customdimensions WHERE index = 13 LIMIT 1) AS customDim13,
-        (SELECT value FROM hits.customdimensions WHERE index = 14 LIMIT 1) AS customDim14,
-        (SELECT value FROM hits.customdimensions WHERE index = 15 LIMIT 1) AS customDim15,
-        (SELECT value FROM hits.customdimensions WHERE index = 16 LIMIT 1) AS customDim16,
-        (SELECT value FROM hits.customdimensions WHERE index = 17 LIMIT 1) AS customDim17,
-        (SELECT value FROM hits.customdimensions WHERE index = 18 LIMIT 1) AS customDim18,
-        (SELECT value FROM hits.customdimensions WHERE index = 19 LIMIT 1) AS customDim19,
-        (SELECT value FROM hits.customdimensions WHERE index = 20 LIMIT 1) AS customDim20,
+        {% for i in range(20) %}
+            {{ index_to_custom_dimensions(i+1) }}
+        {% endfor %}
+        
         CAST('2021-06-01' AS DATE) AS dt
     FROM `civic-axon-265306.testin.ga_sessions_*` AS sessions,
         UNNEST(hits) AS hits

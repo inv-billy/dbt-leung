@@ -2,3 +2,7 @@ version: 2
 
 models: 
     - name: hits
+      description: transformed hits with selene
+      columns:
+      - name: dt
+        description: partition column by file date 
